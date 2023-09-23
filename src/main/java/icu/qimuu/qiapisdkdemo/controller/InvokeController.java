@@ -1,23 +1,26 @@
 package icu.qimuu.qiapisdkdemo.controller;
 
 import com.qimuu.easyweb.common.BaseResponse;
-import com.qimuu.easyweb.common.ErrorCode;
 import com.qimuu.easyweb.common.ResultUtils;
 import com.qimuu.easyweb.exception.BusinessException;
 import icu.qimuu.qiapisdk.client.QiApiClient;
 import icu.qimuu.qiapisdk.exception.ApiException;
 import icu.qimuu.qiapisdk.model.params.HoroscopeParams;
 import icu.qimuu.qiapisdk.model.params.IpInfoParams;
-import icu.qimuu.qiapisdk.model.params.NameParams;
+import icu.qimuu.qiapisdk.model.params.RandomWallpaperParams;
 import icu.qimuu.qiapisdk.model.params.WeatherParams;
-import icu.qimuu.qiapisdk.model.request.*;
+import icu.qimuu.qiapisdk.model.request.HoroscopeRequest;
+import icu.qimuu.qiapisdk.model.request.IpInfoRequest;
+import icu.qimuu.qiapisdk.model.request.RandomWallpaperRequest;
+import icu.qimuu.qiapisdk.model.request.WeatherRequest;
 import icu.qimuu.qiapisdk.model.response.LoveResponse;
-import icu.qimuu.qiapisdk.model.response.NameResponse;
 import icu.qimuu.qiapisdk.model.response.PoisonousChickenSoupResponse;
 import icu.qimuu.qiapisdk.model.response.ResultResponse;
 import icu.qimuu.qiapisdk.service.ApiService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
@@ -34,85 +37,6 @@ public class InvokeController {
     @Resource
     private ApiService apiService;
 
-    /**
-     * get name get
-     *
-     * @param name 名称
-     * @return {@link BaseResponse}<{@link NameResponse}>
-     */
-    @GetMapping("/getName/get")
-    public BaseResponse<NameResponse> getNameGet(String name) {
-        QiApiClient qiApiClient = new QiApiClient("7052a8594339a519e0ba5eb04a267a60", "d8d6df60ab209385a09ac796f1dfe3e1");
-        NameResponse nameResponse = null;
-        try {
-            NameParams nameParams = new NameParams().setName(name);
-            nameParams.setName(name);
-            NameRequest nameRequest = new NameRequest();
-            nameRequest.setRequestParams(nameParams);
-            nameResponse = apiService.request(qiApiClient, nameRequest);
-        } catch (ApiException e) {
-            throw new com.qimuu.easyweb.exception.BusinessException(ErrorCode.OPERATION_ERROR, e.getMessage());
-        }
-        return ResultUtils.success(nameResponse);
-    }
-
-    /**
-     * 获取姓名
-     *
-     * @param nameParams 名称参数
-     * @return {@link BaseResponse}<{@link NameResponse}>
-     */
-    @PostMapping("/getName/post")
-    public BaseResponse<NameResponse> getNamePost(@RequestBody NameParams nameParams) {
-        QiApiClient qiApiClient = new QiApiClient("7052a8594339a519e0ba5eb04a267a60", "d8d6df60ab209385a09ac796f1dfe3e1");
-        NameResponse nameResponse = null;
-        try {
-            NameRequest nameRequest = new NameRequest();
-            nameRequest.setRequestParams(nameParams);
-            nameResponse = apiService.request(qiApiClient, nameRequest);
-        } catch (ApiException e) {
-            throw new com.qimuu.easyweb.exception.BusinessException(ErrorCode.OPERATION_ERROR, e.getMessage());
-        }
-        System.err.println(nameResponse);
-        return ResultUtils.success(nameResponse);
-    }
-
-    /**
-     * 基本请求
-     *
-     * @param currencyRequest 货币请求
-     * @return {@link BaseResponse}<{@link Object}>
-     */
-    @PostMapping("/base")
-    public BaseResponse<Object> baseRequestNotKey(@RequestBody CurrencyRequest currencyRequest) {
-        ResultResponse request = null;
-        try {
-            request = apiService.request(currencyRequest);
-        } catch (ApiException e) {
-            throw new com.qimuu.easyweb.exception.BusinessException(ErrorCode.OPERATION_ERROR, e.getMessage());
-        }
-        System.err.println(request);
-        return ResultUtils.success(request.getData());
-    }
-
-    /**
-     * 基本请求
-     *
-     * @param currencyRequest 货币请求
-     * @return {@link BaseResponse}<{@link Object}>
-     */
-    @PostMapping("/key")
-    public BaseResponse<Object> baseRequest(@RequestBody CurrencyRequest currencyRequest) {
-        QiApiClient qiApiClient = new QiApiClient("7052a8594339a519e0ba5eb04a267a60", "d8d6df60ab209385a09ac796f1dfe3e1");
-        ResultResponse request = null;
-        try {
-            request = apiService.request(qiApiClient, currencyRequest);
-        } catch (ApiException e) {
-            throw new com.qimuu.easyweb.exception.BusinessException(ErrorCode.OPERATION_ERROR, e.getMessage());
-        }
-        System.err.println(request);
-        return ResultUtils.success(request.getData());
-    }
 
     /**
      * 随机毒鸡汤
@@ -122,6 +46,24 @@ public class InvokeController {
     @GetMapping("/getPoisonousChickenSoup")
     public PoisonousChickenSoupResponse getPoisonousChickenSoup() {
         QiApiClient qiApiClient = new QiApiClient("7052a8594339a519e0ba5eb04a267a60", "d8d6df60ab209385a09ac796f1dfe3e1");
+        PoisonousChickenSoupResponse poisonousChickenSoup = null;
+        try {
+            poisonousChickenSoup = apiService.getPoisonousChickenSoup(qiApiClient);
+            System.out.println("poisonousChickenSoup = " + poisonousChickenSoup);
+        } catch (ApiException e) {
+            log.error(e.getMessage());
+        }
+        return poisonousChickenSoup;
+    }
+
+
+    /**
+     * 随机毒鸡汤
+     *
+     * @return {@link PoisonousChickenSoupResponse}
+     */
+    @GetMapping("/getPoisonousChickenSoupKey")
+    public PoisonousChickenSoupResponse getPoisonousChickenSoupKey(QiApiClient qiApiClient) {
         PoisonousChickenSoupResponse poisonousChickenSoup = null;
         try {
             poisonousChickenSoup = apiService.getPoisonousChickenSoup(qiApiClient);
@@ -154,8 +96,8 @@ public class InvokeController {
      *
      * @return {@link BaseResponse}<{@link LoveResponse}>
      */
-    @GetMapping("/love")
-    public BaseResponse<LoveResponse> getLoveResponse() {
+    @GetMapping("/loveTalk/easyWeb")
+    public BaseResponse<LoveResponse> getLoveTalkEasyWeb() {
         LoveResponse loveResponse;
         try {
             loveResponse = apiService.randomLoveTalk();
@@ -165,14 +107,37 @@ public class InvokeController {
         return ResultUtils.success(loveResponse);
     }
 
+    @GetMapping("/loveTalk")
+    public LoveResponse getLoveTalk() {
+        LoveResponse loveResponse;
+        try {
+            loveResponse = apiService.randomLoveTalk();
+        } catch (ApiException e) {
+            throw new BusinessException(e.getCode(), e.getMessage());
+        }
+        return loveResponse;
+    }
+
+    @GetMapping("/loveTalk/setKey")
+    public LoveResponse getLoveTalkSetKey() {
+        LoveResponse loveResponse;
+        try {
+            QiApiClient qiApiClient = new QiApiClient("7052a8594339a519e0ba5eb04a267a60", "d8d6df60ab209385a09ac796f1dfe3e1");
+            loveResponse = apiService.randomLoveTalk(qiApiClient);
+        } catch (ApiException e) {
+            throw new BusinessException(e.getCode(), e.getMessage());
+        }
+        return loveResponse;
+    }
+
     /**
      * 获取星座运势
      *
      * @param horoscopeParams 星座参数
      * @return {@link BaseResponse}<{@link ResultResponse}>
      */
-    @GetMapping("/horoscope")
-    public BaseResponse<ResultResponse> getHoroscope(HoroscopeParams horoscopeParams) {
+    @GetMapping("/getHoroscopeEasyWeb")
+    public BaseResponse<ResultResponse> getHoroscopeEasyWeb(HoroscopeParams horoscopeParams) {
         ResultResponse horoscope;
         try {
             HoroscopeRequest horoscopeRequest = new HoroscopeRequest();
@@ -184,14 +149,55 @@ public class InvokeController {
         return ResultUtils.success(horoscope);
     }
 
+    @GetMapping("/getHoroscope")
+    public ResultResponse getHoroscope(HoroscopeParams horoscopeParams) {
+        ResultResponse horoscope;
+        try {
+            HoroscopeRequest horoscopeRequest = new HoroscopeRequest();
+            horoscopeRequest.setRequestParams(horoscopeParams);
+            horoscope = apiService.horoscope(horoscopeRequest);
+        } catch (ApiException e) {
+            throw new com.qimuu.easyweb.exception.BusinessException(e.getCode(), e.getMessage());
+        }
+        return horoscope;
+    }
+
+    @GetMapping("/getHoroscope/setKey")
+    public ResultResponse getHoroscopeSetKey(HoroscopeParams horoscopeParams) {
+        ResultResponse horoscope;
+        QiApiClient qiApiClient = new QiApiClient("7052a8594339a519e0ba5eb04a267a60", "d8d6df60ab209385a09ac796f1dfe3e1");
+        try {
+            HoroscopeRequest horoscopeRequest = new HoroscopeRequest();
+            horoscopeRequest.setRequestParams(horoscopeParams);
+            horoscope = apiService.horoscope(qiApiClient, horoscopeRequest);
+        } catch (ApiException e) {
+            throw new com.qimuu.easyweb.exception.BusinessException(e.getCode(), e.getMessage());
+        }
+        return horoscope;
+    }
+
     /**
      * 获取ip信息
+     * <p>
+     * // * @param ipInfoParams ip信息参数
      *
-     * @param ipInfoParams ip信息参数
      * @return {@link BaseResponse}<{@link ResultResponse}>
      */
-    @GetMapping("/ipInfo")
-    public BaseResponse<ResultResponse> getIpInfo(IpInfoParams ipInfoParams) {
+    @GetMapping("/ipInfo/easyWeb")
+    public BaseResponse<ResultResponse> getIpInfoEasyWeb(QiApiClient qiApiClient, IpInfoParams ipInfoParams) {
+        ResultResponse resultResponse;
+        try {
+            IpInfoRequest ipInfoRequest = new IpInfoRequest();
+            ipInfoRequest.setRequestParams(ipInfoParams);
+            resultResponse = apiService.getIpInfo(qiApiClient, ipInfoRequest);
+        } catch (ApiException e) {
+            throw new BusinessException(e.getCode(), e.getMessage());
+        }
+        return ResultUtils.success(resultResponse);
+    }
+
+    @GetMapping("/ipInfo/toEasyWeb")
+    public BaseResponse<ResultResponse> getIpInfoEasyWeb(IpInfoParams ipInfoParams) {
         ResultResponse resultResponse;
         try {
             IpInfoRequest ipInfoRequest = new IpInfoRequest();
@@ -203,19 +209,100 @@ public class InvokeController {
         return ResultUtils.success(resultResponse);
     }
 
+    @GetMapping("/ipInfo")
+    public ResultResponse getIpInfo(IpInfoParams ipInfoParams) {
+        QiApiClient qiApiClient = new QiApiClient("7052a8594339a519e0ba5eb04a267a60", "d8d6df60ab209385a09ac796f1dfe3e1");
+        ResultResponse resultResponse;
+        try {
+            IpInfoRequest ipInfoRequest = new IpInfoRequest();
+            ipInfoRequest.setRequestParams(ipInfoParams);
+            resultResponse = apiService.getIpInfo(qiApiClient, ipInfoRequest);
+        } catch (ApiException e) {
+            throw new BusinessException(e.getCode(), e.getMessage());
+        }
+        return resultResponse;
+    }
+
     /**
      * 获取天气信息
      *
      * @param weatherParams ip信息参数
      * @return {@link BaseResponse}<{@link ResultResponse}>
      */
-    @GetMapping("/weatherInfo")
-    public BaseResponse<ResultResponse> getWeatherInfo(WeatherParams weatherParams) {
+    @GetMapping("/weatherInfo/EasyWeb")
+    public BaseResponse<ResultResponse> getWeatherInfoEasyWeb(WeatherParams weatherParams) {
         ResultResponse resultResponse;
         try {
             WeatherRequest weatherRequest = new WeatherRequest();
             weatherRequest.setRequestParams(weatherParams);
             resultResponse = apiService.getWeatherInfo(weatherRequest);
+        } catch (ApiException e) {
+            throw new BusinessException(e.getCode(), e.getMessage());
+        }
+        return ResultUtils.success(resultResponse);
+    }
+
+    @GetMapping("/weatherInfo")
+    public ResultResponse getWeatherInfo(WeatherParams weatherParams) {
+        ResultResponse resultResponse;
+        try {
+            WeatherRequest weatherRequest = new WeatherRequest();
+            weatherRequest.setRequestParams(weatherParams);
+            resultResponse = apiService.getWeatherInfo(weatherRequest);
+        } catch (ApiException e) {
+            throw new BusinessException(e.getCode(), e.getMessage());
+        }
+        return resultResponse;
+    }
+
+    @GetMapping("/weatherInfo/setKey")
+    public ResultResponse getWeatherInfoSetKey(WeatherParams weatherParams) {
+        ResultResponse resultResponse;
+        QiApiClient qiApiClient = new QiApiClient("7052a8594339a519e0ba5eb04a267a60", "d8d6df60ab209385a09ac796f1dfe3e1");
+        try {
+            WeatherRequest weatherRequest = new WeatherRequest();
+            weatherRequest.setRequestParams(weatherParams);
+            resultResponse = apiService.getWeatherInfo(qiApiClient, weatherRequest);
+        } catch (ApiException e) {
+            throw new BusinessException(e.getCode(), e.getMessage());
+        }
+        return resultResponse;
+    }
+
+    @GetMapping("/randomWallpaper/setKey")
+    public ResultResponse getRandomWallpaperSetKey(RandomWallpaperParams randomWallpaperParams) {
+        ResultResponse resultResponse;
+        QiApiClient qiApiClient = new QiApiClient("7052a8594339a519e0ba5eb04a267a60", "d8d6df60ab209385a09ac796f1dfe3e1");
+        try {
+            RandomWallpaperRequest randomWallpaperRequest = new RandomWallpaperRequest();
+            randomWallpaperRequest.setRequestParams(randomWallpaperParams);
+            resultResponse = apiService.getRandomWallpaper(qiApiClient, randomWallpaperRequest);
+        } catch (ApiException e) {
+            throw new BusinessException(e.getCode(), e.getMessage());
+        }
+        return resultResponse;
+    }
+
+    @GetMapping("/randomWallpaper")
+    public ResultResponse getRandomWallpaper(RandomWallpaperParams randomWallpaperParams) {
+        ResultResponse resultResponse;
+        try {
+            RandomWallpaperRequest randomWallpaperRequest = new RandomWallpaperRequest();
+            randomWallpaperRequest.setRequestParams(randomWallpaperParams);
+            resultResponse = apiService.getRandomWallpaper(randomWallpaperRequest);
+        } catch (ApiException e) {
+            throw new BusinessException(e.getCode(), e.getMessage());
+        }
+        return resultResponse;
+    }
+
+    @GetMapping("/randomWallpaper/easyWeb")
+    public BaseResponse<ResultResponse> getRandomWallpaperEasyWeb(RandomWallpaperParams randomWallpaperParams) {
+        ResultResponse resultResponse;
+        try {
+            RandomWallpaperRequest randomWallpaperRequest = new RandomWallpaperRequest();
+            randomWallpaperRequest.setRequestParams(randomWallpaperParams);
+            resultResponse = apiService.getRandomWallpaper(randomWallpaperRequest);
         } catch (ApiException e) {
             throw new BusinessException(e.getCode(), e.getMessage());
         }
