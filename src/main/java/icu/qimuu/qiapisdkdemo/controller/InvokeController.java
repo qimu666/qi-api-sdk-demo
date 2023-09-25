@@ -15,6 +15,7 @@ import icu.qimuu.qiapisdk.model.request.RandomWallpaperRequest;
 import icu.qimuu.qiapisdk.model.request.WeatherRequest;
 import icu.qimuu.qiapisdk.model.response.LoveResponse;
 import icu.qimuu.qiapisdk.model.response.PoisonousChickenSoupResponse;
+import icu.qimuu.qiapisdk.model.response.RandomWallpaperResponse;
 import icu.qimuu.qiapisdk.model.response.ResultResponse;
 import icu.qimuu.qiapisdk.service.ApiService;
 import lombok.extern.slf4j.Slf4j;
@@ -270,8 +271,8 @@ public class InvokeController {
     }
 
     @GetMapping("/randomWallpaper/setKey")
-    public ResultResponse getRandomWallpaperSetKey(RandomWallpaperParams randomWallpaperParams) {
-        ResultResponse resultResponse;
+    public RandomWallpaperResponse getRandomWallpaperSetKey(RandomWallpaperParams randomWallpaperParams) {
+        RandomWallpaperResponse resultResponse;
         QiApiClient qiApiClient = new QiApiClient("7052a8594339a519e0ba5eb04a267a60", "d8d6df60ab209385a09ac796f1dfe3e1");
         try {
             RandomWallpaperRequest randomWallpaperRequest = new RandomWallpaperRequest();
@@ -284,8 +285,8 @@ public class InvokeController {
     }
 
     @GetMapping("/randomWallpaper")
-    public ResultResponse getRandomWallpaper(RandomWallpaperParams randomWallpaperParams) {
-        ResultResponse resultResponse;
+    public RandomWallpaperResponse getRandomWallpaper(RandomWallpaperParams randomWallpaperParams) {
+        RandomWallpaperResponse resultResponse;
         try {
             RandomWallpaperRequest randomWallpaperRequest = new RandomWallpaperRequest();
             randomWallpaperRequest.setRequestParams(randomWallpaperParams);
@@ -297,8 +298,8 @@ public class InvokeController {
     }
 
     @GetMapping("/randomWallpaper/easyWeb")
-    public BaseResponse<ResultResponse> getRandomWallpaperEasyWeb(RandomWallpaperParams randomWallpaperParams) {
-        ResultResponse resultResponse;
+    public BaseResponse<RandomWallpaperResponse> getRandomWallpaperEasyWeb(RandomWallpaperParams randomWallpaperParams) {
+        RandomWallpaperResponse resultResponse;
         try {
             RandomWallpaperRequest randomWallpaperRequest = new RandomWallpaperRequest();
             randomWallpaperRequest.setRequestParams(randomWallpaperParams);
